@@ -32,12 +32,6 @@ void inputCommand() {
         motor2.SetTunings(Kp2, Ki2, Kd2);
         motor3.SetTunings(Kp3, Ki3, Kd3);
         motor4.SetTunings(Kp4, Ki4, Kd4);
-        
-        Serial.println("=========================================");
-        Serial.print("Berhasil Tuning! -> Kp: "); Serial.print(p);
-        Serial.print(" | Ki: "); Serial.print(i);
-        Serial.print(" | Kd: "); Serial.println(d);
-        Serial.println("=========================================");
       }
       
       // 2. Perintah "R": Set Target RPM Roda -> Contoh: R 150 150 150 150
@@ -45,11 +39,13 @@ void inputCommand() {
         Setpoint1 = tok[1].toFloat();
         Setpoint2 = tok[2].toFloat();
         Setpoint3 = tok[3].toFloat();
-        Setpoint4 = tok[4].toFloat();
-        
-        Serial.println("=========================================");
-        Serial.print("Target RPM Diperbarui menjadi: "); Serial.println(Setpoint1);
-        Serial.println("=========================================");
+        Setpoint4 = tok[4].toFloat(); 
+      }
+
+      else if (count == 4 && toupper(tok[0].charAt(0)) == 'K') {
+        rxStruct.Vx = tok[1].toFloat();
+        rxStruct.Vy = tok[2].toFloat();
+        rxStruct.Wr = tok[3].toFloat();
       }
       
       // 3. Perintah "W" (Jalan) dan "Q" (Berhenti)
@@ -57,9 +53,11 @@ void inputCommand() {
         char c = toupper(line.charAt(0));
         if (c == 'Q') {
           stop = true;
+          PID_on = false;
           Serial.println(">> ROBOT BERHENTI DARURAT (STOP) <<");
         } else if (c == 'W') {
           stop = false;
+          PID_on = true;
           Serial.println(">> ROBOT DINYALAKAN (START) <<");
         } else {
           Serial.println("Perintah Salah! Gunakan: 'A <Kp> <Ki> <Kd>', 'R <RPM1> <RPM2> <RPM3> <RPM4>', 'W', atau 'Q'");

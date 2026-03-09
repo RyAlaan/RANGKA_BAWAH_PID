@@ -37,14 +37,18 @@ float target_linear_speed = 1800;
 float target_angular_speed = 1200;
 int Vx,Vy, Wr = 0;
 
+// settling time PID
+unsigned long settlingStart = 0;
+bool settlingDone = false;
+float settlingTime = 0;
 
 /* ---------- PID VERSI 2 ----------*/
 float Setpoint1 = 0, Setpoint2 = 0, Setpoint3 = 0, Setpoint4 = 0; // Target RPM
 // Nilai Kp, Ki, Kd (Bisa Anda atur nanti saat tuning)
-float Output1 = 0, Kp1 = 0.55, Ki1 = 0.004, Kd1 = 0.01;
-float Output2 = 0, Kp2 = 0.55, Ki2 = 0.004, Kd2 = 0.01;
-float Output3 = 0, Kp3 = 0.55, Ki3 = 0.004, Kd3 = 0.01;
-float Output4 = 0, Kp4 = 0.55, Ki4 = 0.004, Kd4 = 0.01;
+float Output1 = 0, Kp1 = 1, Ki1 = 0, Kd1 = 0;
+float Output2 = 0, Kp2 = 1, Ki2 = 0, Kd2 = 0;
+float Output3 = 0, Kp3 = 1, Ki3 = 0, Kd3 = 0;
+float Output4 = 0, Kp4 = 1, Ki4 = 0, Kd4 = 0;
 
 QuickPID motor1(&Vfilt1, &Output1, &Setpoint1, Kp1, Ki1, Kd1,
                QuickPID::pMode::pOnError, 
@@ -122,7 +126,7 @@ struct __attribute__((packed)) STRUCTRX {
   char cmd;
   float Vx;
   float Vy;  
-  float W;
+  float Wr;
 } rxStruct;
 
 struct __attribute__((packed)) STRUCTTX {
@@ -139,7 +143,7 @@ char prevCommand = ' ';
 bool stop = true;
 bool mirror = false;
 bool reset_data = false;
-// bool PID_on = true;
+bool PID_on = false;
 
 /*-------------------------Debounce------------------------------*/
 char prevStart, prevL2;
