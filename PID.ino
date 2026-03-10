@@ -27,37 +27,6 @@ void PID_compute() {
   motor2.Compute();
   motor3.Compute();
   motor4.Compute();
-
-  // Terapkan output ke motor
-  rangkabawah.Movement(constrain(Output1, -4095, 4095),
-                       constrain(Output2, -4095, 4095),
-                       constrain(Output3, -4095, 4095),
-                       constrain(Output4, -4095, 4095));
-
-
-// Print Data ke Serial Monitor setiap 100ms agar Anda bisa melihat efek Tuning
-  if (!stop) {
-    static unsigned long lastPrint = 0;
-    if (millis() - lastPrint >= 100) {
-      // Kita pantau Motor 1 dan Motor 2 saja agar layar tidak terlalu penuh/berantakan
-      // Serial.print("Motor 1 | Target: "); Serial.print(Setpoint1); 
-      // Serial.print(" RPM  >>  ASLI: "); Serial.print(Vfilt1); 
-      // Serial.print(" RPM  ||  PWM Suntikan: "); Serial.println(Output1);
-      
-      // Serial.print("Motor 2 | Target: "); Serial.print(Setpoint2); 
-      // Serial.print(" RPM  >>  ASLI: "); Serial.print(Vfilt2); 
-      // Serial.print(" RPM  ||  PWM Suntikan: "); Serial.println(Output2);
-
-      // Serial.print("Motor 3 | Target: "); Serial.print(Setpoint3); 
-      // Serial.print(" RPM  >>  ASLI: "); Serial.print(Vfilt3); 
-      // Serial.print(" RPM  ||  PWM Suntikan: "); Serial.println(Output3);
-      
-      // Serial.print("Motor 4 | Target: "); Serial.print(Setpoint4); 
-      // Serial.print(" RPM  >>  ASLI: "); Serial.print(Vfilt4); 
-      // Serial.print(" RPM  ||  PWM Suntikan: "); Serial.println(Output4);
-      lastPrint = millis();
-    }
-  }
 }
 
 //   // Cetak untuk debugging

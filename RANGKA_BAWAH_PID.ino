@@ -30,7 +30,7 @@ void setup() {
   calc.init();
   calc.update_angle(0);
 
-  // PID_init();
+  PID_init();
 
   // myTransfer.begin(Serial); // Terhubung ke Mini PC / Python
 }
@@ -45,11 +45,11 @@ void loop() {
   /*=============================MAIN PROGRAM=============================*/
   if (!stop) {
     if (millis() - input_prevmillis >= inputrate) {
-      
-      PID_compute();
 
       // Memanggil pergerakan dari file MoveRobot.ino isinya inverse kinematic 
       MoveRobot();
+      
+      PID_compute();
 
       prev_fr_tics = fr_tics; prev_fl_tics = fl_tics;
       prev_bl_tics = bl_tics; prev_br_tics = br_tics;
