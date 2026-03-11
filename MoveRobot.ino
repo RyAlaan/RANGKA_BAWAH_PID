@@ -85,6 +85,7 @@ void MoveRobot(){
   if(PID_on){
     pwm1 += Output1; pwm2 += Output2; pwm3 += Output3; pwm4 += Output4;
     rangkabawah.Movement(pwm1, pwm2, pwm3, pwm4);
+    // rangkabawah.Movement(Output1, Output2, Output3, Output4);
   } else{
     pwm1 = 0; pwm2 = 0; pwm3 = 0; pwm4 = 0;
     PID_reset();

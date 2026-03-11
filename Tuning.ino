@@ -51,9 +51,6 @@ void inputCommand() {
       }
 
       // Perintah "K": Set kecepatan robot -> Contoh: K 0 150 0
-      // Satuan: sama dengan satuan input inverse_kinematics (RPM)
-      // FIX: syntax rxStruct.field (bukan rxStruct(field))
-      // FIX: nama field .Wr (bukan .W)
       else if (count == 4 && toupper(tok[0].charAt(0)) == 'K') {
         rxStruct.Vx = tok[1].toFloat();
         rxStruct.Vy = tok[2].toFloat();
@@ -73,6 +70,10 @@ void inputCommand() {
           rxStruct.Vx = 0;
           rxStruct.Vy = 0;
           rxStruct.Wr = 0;
+          Setpoint1 = 0;
+          Setpoint2 = 0;
+          Setpoint3 = 0;
+          Setpoint4 = 0;
           Serial.println(">> ROBOT BERHENTI DARURAT (STOP) <<");
         } else if (c == 'W') {
           stop = false;
