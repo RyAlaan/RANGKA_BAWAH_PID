@@ -66,7 +66,7 @@ void inputCommand() {
           stop = false;
           PID_on = true;
           Serial.println(">> ROBOT DINYALAKAN (START) <<");
-        } else {
+        }else {
           Serial.println("Perintah Salah! Gunakan: 'A <Kp> <Ki> <Kd>', 'R <RPM1> <RPM2> <RPM3> <RPM4>', 'W', atau 'Q'");
         }
       }

@@ -82,15 +82,9 @@ void MoveRobot(){
   Setpoint3 = calc.Vwheel[2];
   Setpoint4 = calc.Vwheel[3];
 
-  if(PID_on){
-    pwm1 += Output1; pwm2 += Output2; pwm3 += Output3; pwm4 += Output4;
-    rangkabawah.Movement(pwm1, pwm2, pwm3, pwm4);
-    // rangkabawah.Movement(Output1, Output2, Output3, Output4);
-  } else{
-    pwm1 = 0; pwm2 = 0; pwm3 = 0; pwm4 = 0;
-    PID_reset();
-    rangkabawah.Movement(constrain(calc.Vwheel[0], -4095, 4095), constrain(calc.Vwheel[1], -4095, 4095), constrain(calc.Vwheel[2], -4095, 4095), constrain(calc.Vwheel[3], -4095, 4095));
-  }
+  pwm1 += Output1; pwm2 += Output2; pwm3 += Output3; pwm4 += Output4;
+  rangkabawah.Movement(pwm1, pwm2, pwm3, pwm4);
+  // rangkabawah.Movement(Output1, Output2, Output3, Output4);
 
   calc.forward_kinematics(Vfilt1, Vfilt2, Vfilt3, Vfilt4, false);
   calc.forward_kinematics(ENCFR.read(), ENCFL.read(), ENCBL.read(), ENCBR.read(), true);

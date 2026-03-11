@@ -1,9 +1,9 @@
 #include "Variable.h"
 
 Motor roda1(sel_fr, pwm_fr);  // roda 4
-Motor roda2(sel_fl, pwm_fl);  // roda 2
-Motor roda3(sel_bl, pwm_bl);  // roda 1
-Motor roda4(sel_br, pwm_br);  // roda 3
+// Motor roda2(sel_fl, pwm_fl);  // roda 2
+// Motor roda3(sel_bl, pwm_bl);  // roda 1
+// Motor roda4(sel_br, pwm_br);  // roda 3
 // MotorMid roda5(rpwm_mid, lpwm_mid);
 
 float norm_(float yaw) {
@@ -30,7 +30,7 @@ void setup() {
   calc.init();
   calc.update_angle(0);
 
-  // PID_init();
+  PID_init();
 
   // myTransfer.begin(Serial); // Terhubung ke Mini PC / Python
 }
@@ -45,11 +45,11 @@ void loop() {
   /*=============================MAIN PROGRAM=============================*/
   if (!stop) {
     if (millis() - input_prevmillis >= inputrate) {
-      
-      PID_compute();
 
       // Memanggil pergerakan dari file MoveRobot.ino isinya inverse kinematic 
       MoveRobot();
+      
+      PID_compute();
 
       prev_fr_tics = fr_tics; prev_fl_tics = fl_tics;
       prev_bl_tics = bl_tics; prev_br_tics = br_tics;
@@ -79,23 +79,6 @@ void loop() {
       txStruct.Vx = (float)calc.Vreal[0];
       txStruct.Vy = (float)calc.Vreal[1];
       txStruct.Wr = (float)calc.Vreal[2];
-
-      Serial.print("Setpoint1:");
-      Serial.print(Setpoint1);
-      Serial.print(",RPM1:");
-      Serial.print(Vfilt1);
-      Serial.print(",PWM:");
-      Serial.print(pwm1);
-      Serial.println();
-
-      Serial.print("Setpoint2:");
-      Serial.print(Setpoint2);
-      Serial.print(",RPM2:");
-      Serial.print(Vfilt2);
-      Serial.print(",PWM2:");
-      Serial.print(pwm2);
-      Serial.println();
-      
       input_prevmillis = millis();
     }
   } else {
@@ -112,8 +95,50 @@ void loop() {
     Vx = 0;
     Vy = 0;
     Wr = 0;
+
+    // fungsi PID_on == false pindah ke sini
+    pwm1 = 0; pwm2 = 0; pwm3 = 0; pwm4 = 0;
+    PID_reset();
+    rangkabawah.Movement(constrain(calc.Vwheel[0], -4095, 4095), constrain(calc.Vwheel[1], -4095, 4095), constrain(calc.Vwheel[2], -4095, 4095), constrain(calc.Vwheel[3], -4095, 4095));
+
     rangkabawah.Movement(0, 0, 0, 0);
   }
+
+  Serial.print("Base:"); Serial.print(0);
+
+  Serial.print(",Setpoint1:");
+  Serial.print(Setpoint1);
+  Serial.print(",RPM1:");
+  Serial.print(Vfilt1);
+  Serial.print(",PWM1:");
+  Serial.print(pwm1);
+  Serial.println();
+
+  Serial.print("Setpoint2:");
+  Serial.print(Setpoint2);
+  Serial.print(",RPM2:");
+  Serial.print(Vfilt2);
+  Serial.print(",PWM2:");
+  Serial.print(pwm2);
+  Serial.println();
+}
+
+  Serial.print("Setpoint3:");
+  Serial.print(Setpoint3);
+  Serial.print(",RPM3:");
+  Serial.print(Vfilt3);
+  Serial.print(",PWM3:");
+  Serial.print(pwm3);
+  Serial.println();
+}
+
+  Serial.print("Setpoint4:");
+  Serial.print(Setpoint4);
+  Serial.print(",RPM4:");
+  Serial.print(Vfilt4);
+  Serial.print(",PWM4:");
+  Serial.print(pwm4);
+  Serial.println();
 }
 
 /*============================DEBUG SERIAL============================*/

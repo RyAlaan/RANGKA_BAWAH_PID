@@ -45,10 +45,10 @@ float settlingTime = 0;
 /* ---------- PID VERSI 2 ----------*/
 float Setpoint1 = 0, Setpoint2 = 0, Setpoint3 = 0, Setpoint4 = 0; // Target RPM
 // Nilai Kp, Ki, Kd (Bisa Anda atur nanti saat tuning)
-float Output1 = 0, Kp1 = 1, Ki1 = 0, Kd1 = 0;
-float Output2 = 0, Kp2 = 1, Ki2 = 0, Kd2 = 0;
-float Output3 = 0, Kp3 = 1, Ki3 = 0, Kd3 = 0;
-float Output4 = 0, Kp4 = 1, Ki4 = 0, Kd4 = 0;
+float Output1 = 0, Kp1 = 0.5, Ki1 = 0, Kd1 = 0.02;
+float Output2 = 0, Kp2 = 0.5, Ki2 = 0, Kd2 = 0.02;
+float Output3 = 0, Kp3 = 0.5, Ki3 = 0, Kd3 = 0.02;
+float Output4 = 0, Kp4 = 0.5, Ki4 = 0, Kd4 = 0.02;
 
 QuickPID motor1(&Vfilt1, &Output1, &Setpoint1, Kp1, Ki1, Kd1,
                QuickPID::pMode::pOnError, 
