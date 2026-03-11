@@ -6,10 +6,6 @@ Motor roda3(sel_bl, pwm_bl);  // roda 1
 Motor roda4(sel_br, pwm_br);  // roda 3
 // MotorMid roda5(rpwm_mid, lpwm_mid);
 
-float norm_(float yaw) {
-  return fmod((yaw + 180), 360) - 180;
-}
-
 void setup() {
   Serial.begin(115200);
   Motor::beginPWM(20000, 12);
@@ -73,12 +69,12 @@ void loop() {
       calc.forward_kinematics(Vfilt1, Vfilt2, Vfilt3, Vfilt4, false);
       calc.forward_kinematics(ENCFR.read(), ENCFL.read(), ENCBL.read(), ENCBR.read(), true);
 
-      txStruct.X = (float)calc.dist_travel[0];
-      txStruct.Y = (float)calc.dist_travel[1];
-      txStruct.tetha = norm_((float)calc.dist_travel[2]);
-      txStruct.Vx = (float)calc.Vreal[0];
-      txStruct.Vy = (float)calc.Vreal[1];
-      txStruct.Wr = (float)calc.Vreal[2];
+      // txStruct.X = (float)calc.dist_travel[0];
+      // txStruct.Y = (float)calc.dist_travel[1];
+      // txStruct.tetha = norm_((float) calc.dist_travel[2]);
+      // txStruct.Vx = (float)calc.Vreal[0];
+      // txStruct.Vy = (float)calc.Vreal[1];
+      // txStruct.Wr = (float)calc.Vreal[2];
 
       Serial.print("Setpoint:");
       Serial.print(Setpoint1);
