@@ -92,6 +92,6 @@ void MoveRobot(){
     rangkabawah.Movement(constrain(calc.Vwheel[0], -4095, 4095), constrain(calc.Vwheel[1], -4095, 4095), constrain(calc.Vwheel[2], -4095, 4095), constrain(calc.Vwheel[3], -4095, 4095));
   }
 
-  // calc.forward_kinematics(Vfilt1, Vfilt2, Vfilt3, Vfilt4, false);
-  // calc.forward_kinematics(ENCFR.read(), ENCFL.read(), ENCBL.read(), ENCBR.read(), true);
+  calc.forward_kinematics(Vfilt1, Vfilt2, Vfilt3, Vfilt4, false);
+  calc.forward_kinematics(ENCFR.read(), ENCFL.read(), ENCBL.read(), ENCBR.read(), true);
 }
