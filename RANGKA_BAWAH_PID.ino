@@ -106,39 +106,37 @@ void loop() {
 
   Serial.print("Base:"); Serial.print(0);
 
-  Serial.print(",Setpoint1:");
-  Serial.print(Setpoint1);
-  Serial.print(",RPM1:");
-  Serial.print(Vfilt1);
-  Serial.print(",PWM1:");
-  Serial.print(pwm1);
-  Serial.println();
+  // Serial.print(",Setpoint1:");
+  // Serial.print(Setpoint1);
+  // Serial.print(",RPM1:");
+  // Serial.print(Vfilt1);
+  // Serial.print(",PWM1:");
+  // Serial.print(pwm1);
+  // Serial.println();
 
-  Serial.print("Setpoint2:");
+  Serial.print(",Setpoint2:");
   Serial.print(Setpoint2);
   Serial.print(",RPM2:");
   Serial.print(Vfilt2);
   Serial.print(",PWM2:");
   Serial.print(pwm2);
   Serial.println();
-}
 
-  Serial.print("Setpoint3:");
+  Serial.print(",Setpoint3:");
   Serial.print(Setpoint3);
   Serial.print(",RPM3:");
   Serial.print(Vfilt3);
   Serial.print(",PWM3:");
   Serial.print(pwm3);
   Serial.println();
-}
 
-  Serial.print("Setpoint4:");
-  Serial.print(Setpoint4);
-  Serial.print(",RPM4:");
-  Serial.print(Vfilt4);
-  Serial.print(",PWM4:");
-  Serial.print(pwm4);
-  Serial.println();
+  // Serial.print(",Setpoint4:");
+  // Serial.print(Setpoint4);
+  // Serial.print(",RPM4:");
+  // Serial.print(Vfilt4);
+  // Serial.print(",PWM4:");
+  // Serial.print(pwm4);
+  // Serial.println();
 }
 
 /*============================DEBUG SERIAL============================*/
