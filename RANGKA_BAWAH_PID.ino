@@ -1,11 +1,5 @@
 #include "Variable.h"
 
-Motor roda1(sel_fr, pwm_fr);  // roda 4
-// Motor roda2(sel_fl, pwm_fl);  // roda 2
-// Motor roda3(sel_bl, pwm_bl);  // roda 1
-// Motor roda4(sel_br, pwm_br);  // roda 3
-// MotorMid roda5(rpwm_mid, lpwm_mid);
-
 float norm_(float yaw) {
   return fmod((yaw + 180), 360) - 180;
 }
@@ -59,10 +53,17 @@ void loop() {
       Timing = micros();
 
       float dt = ((float)(Timing - prev_Timing)) / 1.0e6;
-      Vreal1 = ((fr_tics - prev_fr_tics) / dt) / PPR * 60.0;
-      Vreal2 = ((fl_tics - prev_fl_tics) / dt) / PPR * 60.0;
-      Vreal3 = ((bl_tics - prev_bl_tics) / dt) / PPR * 60.0;
-      Vreal4 = ((br_tics - prev_br_tics) / dt) / PPR * 60.0;
+      if (dfr == 0) Vreal1 = 0;
+      else Vreal1 = (dfr / dt) / PPR * 60.0;
+
+      if (dfl == 0) Vreal2 = 0;
+      else Vreal2 = -((dfl / dt) / PPR * 60.0);  // ← tambah negatif
+
+      if (dbl == 0) Vreal3 = 0;
+      else Vreal3 = -((dbl / dt) / PPR * 60.0);  // ← tambah negatif
+
+      if (dbr == 0) Vreal4 = 0;
+      else Vreal4 = (dbr / dt) / PPR * 60.0;
 
       Vfilt1 = Roda_1.updateEstimate(Vreal1);
       Vfilt2 = Roda_2.updateEstimate(Vreal2);
@@ -104,12 +105,12 @@ void loop() {
     rangkabawah.Movement(0, 0, 0, 0);
   }
 
-  Serial.print("Base:"); Serial.print(0);
+  // Serial.print("Base:"); Serial.print(0);
 
-  // Serial.print(",Setpoint1:");
-  // Serial.print(Setpoint1);
-  // Serial.print(",RPM1:");
-  // Serial.print(Vfilt1);
+  Serial.print(",Setpoint1:");
+  Serial.print(Setpoint1);
+  Serial.print(",RPM1:");
+  Serial.print(Vfilt1);
   // Serial.print(",PWM1:");
   // Serial.print(pwm1);
   // Serial.println();
@@ -118,25 +119,25 @@ void loop() {
   Serial.print(Setpoint2);
   Serial.print(",RPM2:");
   Serial.print(Vfilt2);
-  Serial.print(",PWM2:");
-  Serial.print(pwm2);
-  Serial.println();
+  // Serial.print(",PWM2:");
+  // Serial.print(pwm2);
+  // Serial.println();
 
   Serial.print(",Setpoint3:");
   Serial.print(Setpoint3);
   Serial.print(",RPM3:");
   Serial.print(Vfilt3);
-  Serial.print(",PWM3:");
-  Serial.print(pwm3);
-  Serial.println();
+  // Serial.print(",PWM3:");
+  // Serial.print(pwm3);
+  // Serial.println();
 
-  // Serial.print(",Setpoint4:");
-  // Serial.print(Setpoint4);
-  // Serial.print(",RPM4:");
-  // Serial.print(Vfilt4);
+  Serial.print(",Setpoint4:");
+  Serial.print(Setpoint4);
+  Serial.print(",RPM4:");
+  Serial.print(Vfilt4);
   // Serial.print(",PWM4:");
   // Serial.print(pwm4);
-  // Serial.println();
+  Serial.println();
 }
 
 /*============================DEBUG SERIAL============================*/

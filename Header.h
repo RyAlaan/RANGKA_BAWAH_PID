@@ -69,8 +69,10 @@ Kinematics calc;
 const float PPR = 537.6; //PPR Encoder
 Encoder_internal_state_t * Encoder::interruptArgs[];
 Encoder ENCFR(encA_fr, encB_fr, PPR);
-Encoder ENCFL(encA_fl, encB_fl, PPR);
-Encoder ENCBL(encA_bl, encB_bl, PPR);
+// Encoder ENCFL(encA_fl, encB_fl, PPR);
+// Encoder ENCBL(encA_bl, encB_bl, PPR);
+Encoder ENCFL(encB_fl, encA_fl, PPR);
+Encoder ENCBL(encB_bl, encA_bl, PPR);
 Encoder ENCBR(encA_br, encB_br, PPR);
 
 /* --- SERIAL COM --- */
