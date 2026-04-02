@@ -84,18 +84,13 @@ void loop() {
     }
   } else {
     if (reset_data) {
-      ENCFR.readAndReset();
-      ENCFL.readAndReset();
-      ENCBL.readAndReset();
-      ENCBR.readAndReset();
-      calc.dist_travel[0] = 0;
-      calc.dist_travel[1] = 0;
+      ENCFR.readAndReset(); ENCFL.readAndReset();
+      ENCBL.readAndReset(); ENCBR.readAndReset();
+      calc.dist_travel[0] = 0; calc.dist_travel[1] = 0;
       calc.dist_travel[2] = 0;
       reset_data = false;
     }
-    Vx = 0;
-    Vy = 0;
-    Wr = 0;
+    Vx = 0; Vy = 0; Wr = 0;
 
     // fungsi PID_on == false pindah ke sini
     pwm1 = 0; pwm2 = 0; pwm3 = 0; pwm4 = 0;
@@ -105,6 +100,12 @@ void loop() {
     rangkabawah.Movement(0, 0, 0, 0);
   }
 
+  // debugSerial();
+  // debugPID();
+  
+}
+// debugging
+void debugPID() {
   // Serial.print("Base:"); Serial.print(0);
 
   Serial.print(",Setpoint1:");
@@ -141,14 +142,16 @@ void loop() {
 }
 
 /*============================DEBUG SERIAL============================*/
-// static unsigned long lastPrint = 0;
-// if (millis() - lastPrint > 100) {
-//   Serial.print("DS4 Mode | Vy: "); Serial.print(Vy);
-//   Serial.print("  Vx: "); Serial.print(Vx);
-//   Serial.print("  Wr: "); Serial.println(Wr);
-//   lastPrint = millis(); /
-// }
-// }
+void debugSerial() {
+  static unsigned long lastPrint = 0;
+  if (millis() - lastPrint > 100) {
+    Serial.print("DS4 Mode | Vy: "); Serial.print(Vy);
+    Serial.print(" node: "); Serial.print(rxStruct.cmd);
+    Serial.print("  Vx: "); Serial.print(Vx);
+    Serial.print("  Wr: "); Serial.println(Wr);
+    lastPrint = millis();
+  }
+}
 
 void receive() {
   if (myTransfer.available()) {
@@ -159,17 +162,37 @@ void receive() {
   }
 }
 
-void transfer() {
-  if (millis() - timePeriode >= 15) {
+
+void transfer(){
+  if(millis() - timePeriode >= 15){
     int16_t sendSize = 0;
+    // struct __attribute__((packed)) STRUCT {
+    //   float pwm1 = calc.Vwheel[0];
+    //   float pwm2 = calc.Vwheel[1];
+    //   float pwm3 = calc.Vwheel[2];
+    //   float pwm4 = calc.Vwheel[3];
+    // }testStruct;
+
     struct __attribute__((packed)) STRUCT {
-      float pwm1 = calc.Vwheel[0];
-      float pwm2 = calc.Vwheel[1];
-      float pwm3 = calc.Vwheel[2];
-      float pwm4 = calc.Vwheel[3];
-    } testStruct;
-    sendSize = myTransfer.txObj(testStruct, sendSize);
+      float X = 10.00;
+      float Y = 20.00;
+      float tetha = 30.00;
+      float Vx = 40.00;
+      float Vy = 50.00;
+      float Wr = 60.00;
+    }txStruct;
+
+    sendSize = myTransfer.txObj(txStruct.X, sendSize);
+    sendSize = myTransfer.txObj(txStruct.Y, sendSize);
+    sendSize = myTransfer.txObj(txStruct.tetha, sendSize);
+    sendSize = myTransfer.txObj(txStruct.Vx, sendSize);
+    sendSize = myTransfer.txObj(txStruct.Vy, sendSize);
+    sendSize = myTransfer.txObj(txStruct.Wr, sendSize);
+
     myTransfer.sendData(sendSize);
+
+    // sendSize = myTransfer.txObj(txStruct, sendSize);
+    // myTransfer.sendData(sendSize);
     timePeriode = millis();
   }
 }
