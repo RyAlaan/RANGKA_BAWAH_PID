@@ -1,5 +1,11 @@
 #include "Variable.h"
 
+Motor roda1(sel_fr, pwm_fr); // roda 4
+Motor roda2(sel_fl, pwm_fl); // roda 2
+Motor roda3(sel_bl, pwm_bl); // roda 1
+Motor roda4(sel_br, pwm_br); // roda 3
+MotorMid roda5(rpwm_mid, lpwm_mid);
+
 float norm_(float yaw) {
   return fmod((yaw + 180), 360) - 180;
 }
@@ -28,7 +34,7 @@ void setup() {
 
   PID_init();
 
-  // myTransfer.begin(Serial); // Terhubung ke Mini PC / Python
+  myTransfer.begin(Serial); // Terhubung ke Mini PC / Python
 }
 
 void loop() {
@@ -36,17 +42,17 @@ void loop() {
   receive();
 
   /* ===================== TERIMA PERINTAH TUNING ============== */
-  // inputCommand();
+  inputCommand();
 
   /*=============================MAIN PROGRAM=============================*/
-  if (!stop) {
+  if (stop) {
     if (millis() - input_prevmillis >= inputrate) {
 
       // Memanggil pergerakan dari file MoveRobot.ino isinya inverse kinematic 
       MoveRobot();
       
       PID_compute();
-
+ 
       prev_fr_tics = fr_tics; prev_fl_tics = fl_tics;
       prev_bl_tics = bl_tics; prev_br_tics = br_tics;
       fr_tics = ENCFR.read(); fl_tics = ENCFL.read();
@@ -75,10 +81,14 @@ void loop() {
       txStruct.Vx = (float)calc.Vreal[0];
       txStruct.Vy = (float)calc.Vreal[1];
       txStruct.Wr = (float)calc.Vreal[2];
-      
-      input_prevmillis = millis();
 
-      transfer();
+
+      uint16_t sendSize = 0;
+      sendSize = myTransfer.txObj(txStruct, sendSize);
+      myTransfer.sendData(sendSize);
+
+      input_prevmillis = millis();
+      // transfer();
     }
   } else {
     if (reset_data) {
@@ -98,11 +108,11 @@ void loop() {
     rangkabawah.Movement(0, 0, 0, 0);
   }
 
-  // debugSerial();
-  // debugPID();
-  // transfer();
+  debugSerial();
+  debugPID();
 
 }
+
 // debugging
 void debugPID() {
   // Serial.print("Base:"); Serial.print(0);
@@ -152,15 +162,21 @@ void debugSerial() {
   }
 }
 
-void receive() {
-  if (myTransfer.available()) {
+void receive(){
+  if(myTransfer.available()){
     int16_t recSize = 0;
     recSize = myTransfer.rxObj(rxStruct, recSize);
-    if (rxStruct.cmd == 'a') stop = false;
-    else if (rxStruct.cmd == 'b') stop = true;
-  }
-}
 
+    // Mengekstrak karakter CMD dari Python
+    if (rxStruct.cmd == 'f') {
+      stop = false; // Robot nyala jika pencet X
+    } else if (rxStruct.cmd == 'e') {
+      stop = true;  // Robot mati jika pencet O
+    } else if (rxStruct.cmd == 'h') {
+      roller = !roller;
+    } 
+  }  
+}
 
 void transfer(){
   if(millis() - timePeriode >= 15){
@@ -172,26 +188,24 @@ void transfer(){
     //   float pwm4 = calc.Vwheel[3];
     // }testStruct;
 
-    struct __attribute__((packed)) STRUCT {
-      float X = 10.00;
-      float Y = 20.00;
-      float tetha = 30.00;
-      float Vx = 40.00;
-      float Vy = 50.00;
-      float Wr = 60.00;
-    }txStruct;
+    // struct __attribute__((packed)) STRUCT {
+    //   float X = 10.00;
+    //   float Y = 20.00;
+    //   float tetha = 30.00;
+    //   float Vx = 40.00;
+    //   float Vy = 50.00;
+    //   float Wr = 60.00;
+    // }txStruct;
 
-    sendSize = myTransfer.txObj(txStruct.X, sendSize);
-    sendSize = myTransfer.txObj(txStruct.Y, sendSize);
-    sendSize = myTransfer.txObj(txStruct.tetha, sendSize);
-    sendSize = myTransfer.txObj(txStruct.Vx, sendSize);
-    sendSize = myTransfer.txObj(txStruct.Vy, sendSize);
-    sendSize = myTransfer.txObj(txStruct.Wr, sendSize);
+    // sendSize = myTransfer.txObj(txStruct.X, sendSize);
+    // sendSize = myTransfer.txObj(txStruct.Y, sendSize);
+    // sendSize = myTransfer.txObj(txStruct.tetha, sendSize);
+    // sendSize = myTransfer.txObj(txStruct.Vx, sendSize);
+    // sendSize = myTransfer.txObj(txStruct.Vy, sendSize);
+    // sendSize = myTransfer.txObj(txStruct.Wr, sendSize);
 
+    sendSize = myTransfer.txObj(txStruct, sendSize);
     myTransfer.sendData(sendSize);
-
-    // sendSize = myTransfer.txObj(txStruct, sendSize);
-    // myTransfer.sendData(sendSize);
     timePeriode = millis();
   }
 }
