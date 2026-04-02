@@ -44,6 +44,13 @@ MotorMid::MotorMid(uint8_t pin_r_pwm, uint8_t pin_l_pwm)
   analogWrite(l_pwm, 0);
 }
 
+void MotorMid::beginPWM(uint32_t freq, uint8_t res)
+{
+  analogWriteResolution(res);     // berlaku global
+  analogWriteFrequency(freq);     // berlaku global
+}
+
+
 void MotorMid::cw_mid(uint16_t duty)
 {
   analogWrite(r_pwm, duty);

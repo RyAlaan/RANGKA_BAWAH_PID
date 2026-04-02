@@ -6,8 +6,10 @@ float norm_(float yaw) {
 
 void setup() {
   Serial.begin(115200);
-  Motor::beginPWM(20000, 12);
-  // MotorMid::beginPWM(2000, 12);
+  // Motor::beginPWM(20000, 12);  
+  // MotorMid::beginPWM(20000, 12);  
+  Motor::beginPWM(255, 8);  
+  MotorMid::beginPWM(255, 8);  
 
   pinMode(LED, OUTPUT);
   digitalWrite(LED, LOW);
@@ -31,10 +33,10 @@ void setup() {
 
 void loop() {
   /* ===================== TERIMA DATA DS4 ===================== */
-  // receive();
+  receive();
 
   /* ===================== TERIMA PERINTAH TUNING ============== */
-  inputCommand();
+  // inputCommand();
 
   /*=============================MAIN PROGRAM=============================*/
   if (!stop) {
@@ -53,18 +55,11 @@ void loop() {
       Timing = micros();
 
       float dt = ((float)(Timing - prev_Timing)) / 1.0e6;
-      if (dfr == 0) Vreal1 = 0;
-      else Vreal1 = (dfr / dt) / PPR * 60.0;
-
-      if (dfl == 0) Vreal2 = 0;
-      else Vreal2 = -((dfl / dt) / PPR * 60.0);  // ← tambah negatif
-
-      if (dbl == 0) Vreal3 = 0;
-      else Vreal3 = -((dbl / dt) / PPR * 60.0);  // ← tambah negatif
-
-      if (dbr == 0) Vreal4 = 0;
-      else Vreal4 = (dbr / dt) / PPR * 60.0;
-
+      Vreal1 = ((fr_tics - prev_fr_tics) / dt) / PPR * 60.0;
+      Vreal2 = -(((fl_tics - prev_fl_tics) / dt) / PPR * 60.0);
+      Vreal3 = -(((bl_tics - prev_bl_tics) / dt) / PPR * 60.0);
+      Vreal4 = ((br_tics - prev_br_tics) / dt) / PPR * 60.0;
+      
       Vfilt1 = Roda_1.updateEstimate(Vreal1);
       Vfilt2 = Roda_2.updateEstimate(Vreal2);
       Vfilt3 = Roda_3.updateEstimate(Vreal3);
@@ -80,7 +75,10 @@ void loop() {
       txStruct.Vx = (float)calc.Vreal[0];
       txStruct.Vy = (float)calc.Vreal[1];
       txStruct.Wr = (float)calc.Vreal[2];
+      
       input_prevmillis = millis();
+
+      transfer();
     }
   } else {
     if (reset_data) {
@@ -102,7 +100,8 @@ void loop() {
 
   // debugSerial();
   // debugPID();
-  
+  // transfer();
+
 }
 // debugging
 void debugPID() {

@@ -26,6 +26,7 @@ class Motor {
 
 class MotorMid {
   public:
+    static void beginPWM(uint32_t freq = 20000, uint8_t res = 12);
     /* motor tengah (roller) pakai 2 pin PWM: kanan & kiri */
     MotorMid(uint8_t pin_r_pwm, uint8_t pin_l_pwm);
 

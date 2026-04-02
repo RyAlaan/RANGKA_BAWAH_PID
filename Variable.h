@@ -36,6 +36,7 @@ const int min_motor_pwm = 25; //pwm min for the motor to start rotating
 float target_linear_speed = 1800;
 float target_angular_speed = 1200;
 int Vx = 0, Vy = 0, Wr = 0;
+int vxg = 0, vyg = 0;
 
 // settling time PID
 unsigned long settlingStart = 0;

@@ -34,13 +34,10 @@ void ManualMode() {
   // Mengubah data analog DS4 (-1.0 s/d 1.0) menjadi nilai kecepatan RPM
   Vx = -rxStruct.Vx * target_linear_speed;
   Vy = -rxStruct.Vy * target_linear_speed;
-  Wr = rxStruct.W * target_angular_speed;
+  Wr = rxStruct.Wr * target_angular_speed;
   
   // Menghitung Kinematika
   calc.inverse_kinematics(Vx, Vy, Wr);
-
-  // translate to global
-  calc.converte_global(&Vx, &Vy);
     
   /*------------------------ 2. Logika Mirror ------------------------------*/
   // Misal rxStruct.cmd == 'j' dikirim dari DS4 untuk membalikkan arah robot
